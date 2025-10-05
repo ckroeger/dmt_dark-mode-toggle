@@ -39,6 +39,7 @@
         /* Main style for Dark Mode: inversion */
         body.dark-mode-active {
             filter: invert(1) hue-rotate(180deg);
+            background-color: #181818 !important; /* dark background */
         }
 
         /* Re-invert images and videos */
@@ -49,14 +50,31 @@
         }
     `);
 
-    // 2. toggle-function
+    // helper-function to set and restore the original body background
+    let originalBodyBg = null;
+
+    function setDarkModeBg() {
+        if (originalBodyBg === null) {
+            originalBodyBg = document.body.style.backgroundColor || '';
+        }
+        document.body.style.backgroundColor = '#181818';
+    }
+
+    function restoreBodyBg() {
+        document.body.style.backgroundColor = originalBodyBg;
+    }
+
     function toggleDarkMode() {
         const isEnabled = document.body.classList.toggle('dark-mode-active');
         localStorage.setItem(storageKey, isEnabled ? 'true' : 'false');
         updateButtonText(isEnabled);
+        if (isEnabled) {
+            setDarkModeBg();
+        } else {
+            restoreBodyBg();
+        }
     }
 
-    // 3. update button
     function updateButtonText(isEnabled) {
         const button = document.getElementById('darkModeToggle');
         if (button) {
@@ -64,7 +82,6 @@
         }
     }
 
-    // 4. create and add button
     const toggleButton = document.createElement('button');
     toggleButton.id = 'darkModeToggle';
     toggleButton.addEventListener('click', toggleDarkMode);
@@ -76,6 +93,7 @@
 
     if (initiallyEnabled) {
         document.body.classList.add('dark-mode-active');
+        setDarkModeBg();
     }
     updateButtonText(initiallyEnabled);
 
