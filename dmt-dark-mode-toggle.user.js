@@ -19,20 +19,44 @@
         #darkModeToggle {
             position: fixed;
             top: 15px;
-            right: 15px;
+            right: 0; /* immer bündig am Rand */
             z-index: 99999;
             background-color: #333;
             color: white;
             border: none;
             padding: 8px 12px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 5px 0 0 5px;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: background-color 0.3s;
+            transition: transform 0.3s cubic-bezier(.4,2,.6,1), background-color 0.3s;
+            width: 48px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: visible;
         }
 
-        #darkModeToggle:hover {
+        #darkModeToggle::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: rgba(10, 40, 120, 0.7); /* dunkelblau, halbtransparent */
+            border-radius: 5px 0 0 5px;
+        }
+
+        #darkModeToggle:not(:hover):not(:focus) {
+            transform: translateX(35px); /* nur Lasche sichtbar */
+        }
+
+        #darkModeToggle:hover,
+        #darkModeToggle:focus {
+            transform: translateX(0); /* komplett sichtbar */
             background-color: #555;
         }
 
