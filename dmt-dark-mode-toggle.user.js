@@ -78,7 +78,8 @@
     function updateButtonText(isEnabled) {
         const button = document.getElementById('darkModeToggle');
         if (button) {
-            button.textContent = isEnabled ? '💡 Light Mode' : '🌙 Dark Mode';
+            button.textContent = isEnabled ? '💡' : '🌙';
+            button.title = isEnabled ? 'Light Mode' : 'Dark Mode';
         }
     }
 
