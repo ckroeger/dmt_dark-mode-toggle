@@ -17,9 +17,12 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install marked
+        run: npm install -g marked
+
       - name: Generate HTML from README.md
         run: |
-          npx markdown-to-html README.md > site-content.html
+          marked README.md > site-content.html
 
       - name: Create index.html with install button
         run: |
