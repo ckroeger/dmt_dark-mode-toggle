@@ -1,0 +1,72 @@
+name: Build Docs
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate HTML from README.md
+        run: |
+          npx markdown-to-html README.md > site-content.html
+
+      - name: Create index.html with install button
+        run: |
+          echo '<!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>DMT UserScript</title>
+            <style>
+              body { font-family: sans-serif; margin: 2em; }
+              .install-btn {
+                display: inline-block;
+                background: #333;
+                color: #fff;
+                padding: 0.8em 1.5em;
+                border-radius: 5px;
+                font-size: 1.2em;
+                text-decoration: none;
+                margin-bottom: 2em;
+                transition: background 0.2s;
+              }
+              .install-btn:hover { background: #0057b8; }
+            </style>
+          </head>
+          <body>
+            <a class="install-btn" href="dmt-dark-mode-toggle.user.js">Install DMT Script</a>
+          ' > index.html
+          cat site-content.html >> index.html
+          echo '</body></html>' >> index.html
+          rm site-content.html
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dmt-docs
+          path: |
+            index.html
+            dmt-dark-mode-toggle.user.js
+
+      # Optional: Deploy to GitHub Pages (uncomment if desired)
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: .
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: .
